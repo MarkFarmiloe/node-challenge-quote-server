@@ -1,7 +1,7 @@
 // server.js
 // This is where your node app starts
 
-//load the 'express' module which makes writing webservers easy
+//load the 'express' module which makes writing web servers easy
 const express = require("express");
 const app = express();
 
@@ -13,10 +13,33 @@ const quotes = require("./quotes.json");
 //   /quotes            - Should return all quotes (json)
 //   /quotes/random     - Should return ONE quote (json)
 app.get("/", function (request, response) {
-  response.send("Neill's Quote Server!  Ask me for /quotes/random, or /quotes");
+  response.send("Mark's Quote Server!  Ask me for /quotes/random, or /quotes");
 });
 
 //START OF YOUR CODE...
+
+app.get("/quotes", (req, res) => {
+  let id = parseInt(req.query.id);
+  if (id && id <= quotes.length) {
+    res.send(quotes[id - 1]);
+  } else {
+    res.send(quotes);
+  }
+});
+
+app.get("/quotes/random", (req, res) => {
+  res.send(pickFromArray(quotes));
+});
+
+app.get("/quotes/:id", (req, res) => {
+  let id = parseInt(req.params.id);
+  if (id && id <= quotes.length) {
+    res.send(quotes[id - 1]);
+  } else {
+    res.send(quotes);
+  }
+  res.send(pickFromArray(quotes));
+});
 
 //...END OF YOUR CODE
 
@@ -30,5 +53,6 @@ function pickFromArray(arr) {
 
 //Start our server so that it listens for HTTP requests!
 const listener = app.listen(process.env.PORT, function () {
+  //console.log(quotes.length);
   console.log("Your app is listening on port " + listener.address().port);
 });
